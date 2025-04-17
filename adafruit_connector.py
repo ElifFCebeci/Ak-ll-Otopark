@@ -20,12 +20,12 @@ def connected(client):
 def message(client, feed_id, payload):
     print(f"📨 Feed: {feed_id} | İçerik: {payload}")
 
-# 🔧 MQTT istemcisi oluşturuluyor
+# MQTT istemcisi oluşturuluyor
 client = MQTTClient(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
 client.on_connect = connected
 client.on_message = message
 
-# 🌐 Bağlantıyı başlat
+# Bağlantıyı başlat
 client.connect()
 client.loop_background()
 
@@ -36,5 +36,5 @@ while True:
     client.publish(FEED_SLOT2, "BOŞ")
     client.publish(FEED_STATUS, "AKTİF")
 
-    print("🚀 Veriler Adafruit IO'ya gönderildi.")
+    print(" Veriler Adafruit IO'ya gönderildi.")
     time.sleep(10)
