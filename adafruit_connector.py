@@ -1,23 +1,22 @@
 from Adafruit_IO import MQTTClient
 import time
 
-# 🧑‍💻 Kullanıcı adı ve IO Key
 ADAFRUIT_IO_USERNAME = "Elif19"
 ADAFRUIT_IO_KEY = "aio_cfPa32MhI58OmHsfScUDmBUKYJof"
 
-# 📦 Feed key'leri
+# Feed key'leri
 FEED_SLOT1 = "1-park-alaninin-durumu"
 FEED_SLOT2 = "2-park-alaninin-durumu"
 FEED_STATUS = "genel-sistem-durumu"
 
-# 🔌 Bağlantı kurulduğunda çalışır
+# Bağlantı kurulduğunda çalışır
 def connected(client):
     print("✅ MQTT bağlantısı kuruldu.")
     client.subscribe(FEED_SLOT1)
     client.subscribe(FEED_SLOT2)
     client.subscribe(FEED_STATUS)
 
-# 📩 Mesaj geldiğinde çalışır
+# Mesaj geldiğinde çalışır
 def message(client, feed_id, payload):
     print(f"📨 Feed: {feed_id} | İçerik: {payload}")
 
@@ -30,7 +29,7 @@ client.on_message = message
 client.connect()
 client.loop_background()
 
-# 🔁 Örnek veri gönderimi
+#  Örnek veri gönderimi
 while True:
     # Buraya gerçek sistemden gelen veriler de yazılabilir
     client.publish(FEED_SLOT1, "DOLU")
