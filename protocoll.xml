@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol>
+    <message>
+        <header pattern="^DEV:\d{1,2}; " />
+
+        <body>
+            <field name="FLOOR"  pattern="FLOOR:\d{1,2}; " />
+            <field name="SLOT"  pattern="SLOT:[A-Z]\d{1,2}; " />
+            <field name="STATUS" pattern="STATUS:(DOLU|BOŞ); " />
+            <field name="DATE"  pattern="DATE:\d{4}-\d{2}-\d{2}; " />
+            <field name="TIME"  pattern="TIME:\d{2}:\d{2}:\d{2}; " />
+        </body>
+
+        <footer pattern="#" />
+    </message>
+</protocol>
