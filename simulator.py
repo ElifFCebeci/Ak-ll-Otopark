@@ -4,37 +4,51 @@ import time
 from datetime import datetime
 import xml.etree.ElementTree as ET
 import os
+
 ADAFRUIT_IO_USERNAME = "Elif19"
 ADAFRUIT_IO_KEY = "aio_cfPa32MhI58OmHsfScUDmBUKYJof"
-FEED_KEYS = ["1-park-alaninin-durumu", "2-park-alaninin-durumu"]
+FEED_KEYS = [
+    "1-park-alaninin-durumu", "2-park-alaninin-durumu",
+    "3-park-alaninin-durumu", "4-park-alaninin-durumu",
+    "5-park-alaninin-durumu", "6-park-alaninin-durumu",
+    "7-park-alaninin-durumu", "8-park-alaninin-durumu"
+]
 
-# MQTT bağlantısı
+PARK_KATLARI = {
+    "1-park-alaninin-durumu": 1,
+    "2-park-alaninin-durumu": 1,
+    "3-park-alaninin-durumu": 1,
+    "4-park-alaninin-durumu": 1,
+    "5-park-alaninin-durumu": 2,
+    "6-park-alaninin-durumu": 2,
+    "7-park-alaninin-durumu": 2,
+    "8-park-alaninin-durumu": 2,
+}
+
 def connected(client):
-    print("Connection successful!")
+    print("Bağlantı başarılı!")
 
 client = MQTTClient(ADAFRUIT_IO_USERNAME, ADAFRUIT_IO_KEY)
 client.on_connect = connected
 client.connect()
 client.loop_background()
 
-# XML tabanlı log kaydı yapma fonksiyonu
+# XML log fonksiyonu
 def log_message_xml(device, message, is_valid):
     log_file_path = "simulator_log.xml"
 
-    # Dosya varsa oku, yoksa yeni logs elementi oluştur
     if os.path.exists(log_file_path) and os.path.getsize(log_file_path) > 0:
         try:
             tree = ET.parse(log_file_path)
             root = tree.getroot()
         except ET.ParseError:
-            print("Bozul XML dosyası. Yeniden başlatılıyor.")
+            print("Bozuk XML dosyası. Yeniden başlatılıyor.")
             root = ET.Element("logs")
             tree = ET.ElementTree(root)
     else:
         root = ET.Element("logs")
         tree = ET.ElementTree(root)
 
-    # Yeni log girdisi
     log_entry = ET.SubElement(root, "log")
 
     timestamp = ET.SubElement(log_entry, "timestamp")
@@ -49,66 +63,55 @@ def log_message_xml(device, message, is_valid):
     message_element = ET.SubElement(log_entry, "message")
     message_element.text = message
 
-    # Dosyayı tekrar yaz
     tree.write(log_file_path, encoding="utf-8", xml_declaration=True)
-# DFA ile veri doğrulama fonksiyonu
-def dfa_validate(status, temperature, humidity):
-    state = "q0"
 
-    if state == "q0":
-        if status in ["DOLU", "BOŞ"]:
-            state = "q1"
-        else:
-            return False
+# DFA: her katta boş yer var mı kontrol et
+def dfa_validate_floors(status_list):
+    floor1 = status_list[:4]
+    floor2 = status_list[4:]
 
-    if state == "q1":
-        if 20.0 <= temperature <= 30.0:
-            state = "q2"
-        else:
-            return False,"Temperature out of range"
+    boş1 = floor1.count("BOŞ")
+    boş2 = floor2.count("BOŞ")
 
-    if state == "q2":
-        if 30 <= humidity <= 65:
-            state = "q3"
-        else:
-            return False,"Humidity out of range"
-
-    if state == "q3":
-        return True,"Geçerli veri"
-
-    return False
-
-# Başlangıç verileri
-temperature = [25.0, 26.0]
-humidity = [45, 50]
+    if boş1 > 0:
+        return True, f"1. katta {boş1} boş park yeri var."
+    elif boş2 > 0:
+        return True, f"2. katta {boş2} boş park yeri var."
+    else:
+        return False, "Tüm park alanları dolu."
 
 # Simülasyon döngüsü
 while True:
-    for i in range(2):
-        device_id = f"DEV:0{i+1}"
+    status_list = []
 
-        # Sıcaklık ve nem trende göre değişiyor
-        temp_delta = random.uniform(-0.4, 0.4)
-        temperature[i] = max(20.0, min(30.0, temperature[i] + temp_delta))
-
-        hum_delta = random.randint(-2, 2)
-        humidity[i] = max(30, min(65, humidity[i] + hum_delta))
-
-        status = random.choice(["DOLU", "BOŞ"])
-        # Sorunlu veri gönderimi,gerçek hayat ile uyumlu olmasını sağlar.
-        if random.random() < 0.15:  # %15 ihtimalle hatalı veri gönder
-            bad_msg = "Hatalı Veri"
-            print(f"HATALI: {bad_msg}")
-            client.publish(FEED_KEYS[i], bad_msg)
-            log_message_xml(device_id, bad_msg, False)
+    for i in range(8):  # 8 park yeri
+        if random.random() < 0.15:
+            status = "HATALI VERİ"
         else:
-            if dfa_validate(status, temperature[i], humidity[i]):
-                good_msg = f"{status}"
-                print(f"Geçerli: {good_msg}")
-                client.publish(FEED_KEYS[i], good_msg)
-                log_message_xml(device_id, good_msg, True)
-            else:
-                print(f"Geçersiz veri - tekrar gönderilmiyor: {device_id}")
-                log_message_xml(device_id, f"{status}/{temperature[i]}/{humidity[i]}", False)
+            status = random.choice(["DOLU", "BOŞ"])
+        status_list.append(status)
 
-    time.sleep(7) 
+    # Yayınla ve logla
+    for i in range(8):
+        device_id = f"DEV:{i+1:02d}"
+        status = status_list[i]
+        kat = PARK_KATLARI[FEED_KEYS[i]]
+        mesaj = f"Kat {kat} - Park Yeri {i+1}: {status}"
+        client.publish(FEED_KEYS[i], mesaj)
+        if status == "HATALI VERİ":
+            print(f"HATALI: {device_id} - {mesaj}")
+            log_message_xml(device_id, status, False)
+        else:
+            print(f"Durum: {device_id} - {mesaj}")
+            log_message_xml(device_id, status, True)
+
+    # DFA analizi
+    if "HATALI VERİ" not in status_list:
+        is_valid, message = dfa_validate_floors(status_list)
+        print("TÜM DURUMLAR:", status_list)
+        print("SİSTEM MESAJI:", message)
+        log_message_xml("SİSTEM", message, is_valid)
+    else:
+        print("Geçersiz veriler tespit edildi, DFA çalıştırılmadı.")
+
+    time.sleep(5)
