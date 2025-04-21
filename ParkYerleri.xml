@@ -1,0 +1,37 @@
+<park_yerleri>
+    <!-- 1. Kat Park Alanları -->
+    <yer>
+        <konum>1-park-alaninin-durumu</konum>
+        <durum>BOŞ</durum>
+    </yer>
+    <yer>
+        <konum>2-park-alaninin-durumu</konum>
+        <durum>DOLU</durum>
+    </yer>
+    <yer>
+        <konum>3-park-alaninin-durumu</konum>
+        <durum>BOŞ</durum>
+    </yer>
+    <yer>
+        <konum>4-park-alaninin-durumu</konum>
+        <durum>BOŞ</durum>
+    </yer>
+
+    <!-- 2. Kat Park Alanları -->
+    <yer>
+        <konum>5-park-alaninin-durumu</konum>
+        <durum>DOLU</durum>
+    </yer>
+    <yer>
+        <konum>6-park-alaninin-durumu</konum>
+        <durum>BOŞ</durum>
+    </yer>
+    <yer>
+        <konum>7-park-alaninin-durumu</konum>
+        <durum>DOLU</durum>
+    </yer>
+    <yer>
+        <konum>8-park-alaninin-durumu</konum>
+        <durum>BOŞ</durum>
+    </yer>
+</park_yerleri>
