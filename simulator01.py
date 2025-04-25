@@ -1,5 +1,6 @@
 import re
 import random
+import keyboard
 import time
 import os
 import xml.etree.ElementTree as ET
@@ -86,24 +87,31 @@ client.loop_background()
 # XML protokolü yükle
 header_pattern, body_patterns, footer_pattern = load_protocol("protocoll.xml")
 
-# Simülasyon Döngüsü
-while True:
-    for i in range(8):
-        device_id = f"DEV:{i+1:02d}"
-        kat = PARK_KATLARI[FEED_KEYS[i]]
-        status = "HATALI VERİ" if random.random() < 0.15 else random.choice(["DOLU", "BOŞ"])
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+try:
+    while True:
+        if keyboard.is_pressed('q'):
+            print("Kullanıcı çıkış yaptı. Simülasyon durduruluyor.")
+            break
 
-        mesaj = f"{device_id}; FLOOR:{kat}; SLOT:A{i+1}; STATUS:{status}; DATE:{timestamp[:10]}; TIME:{timestamp[11:]}; #"
+        for i in range(8):
+            device_id = f"DEV:{i+1:02d}"
+            kat = PARK_KATLARI[FEED_KEYS[i]]
+            status = "HATALI VERİ" if random.random() < 0.15 else random.choice(["DOLU", "BOŞ"])
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        is_valid, validation_msg = validate_message(mesaj, header_pattern, body_patterns, footer_pattern)
+            mesaj = f"{device_id}; FLOOR:{kat}; SLOT:A{i+1}; STATUS:{status}; DATE:{timestamp[:10]}; TIME:{timestamp[11:]}; #"
 
-        if is_valid:
-            print(f"✅ Geçerli mesaj: {mesaj}")
-            client.publish(FEED_KEYS[i], mesaj)
-        else:
-            print(f"❌ Geçersiz mesaj: {validation_msg}")
+            is_valid, validation_msg = validate_message(mesaj, header_pattern, body_patterns, footer_pattern)
 
-        log_message_xml(device_id, mesaj, is_valid)
+            if is_valid:
+                print(f"✅ Geçerli mesaj: {mesaj}")
+                client.publish(FEED_KEYS[i], mesaj)
+            else:
+                print(f"❌ Geçersiz mesaj: {validation_msg}")
 
-    time.sleep(5)
+            log_message_xml(device_id, mesaj, is_valid)
+
+        time.sleep(5)
+
+except KeyboardInterrupt:
+    print("Program manuel olarak durduruldu.")
