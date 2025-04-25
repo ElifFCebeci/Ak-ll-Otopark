@@ -51,8 +51,11 @@ def validate_message(message, header_pattern, body_patterns, footer_pattern):
 
     return pos == len(message), " Mesaj geçerli"
 
-# Loglama
+# Loglama (Sadece geçersiz mesajlar kaydedilecek)
 def log_message_xml(device, message, is_valid):
+    if is_valid:  # Eğer mesaj geçerliyse loga ekleme yapma
+        return
+
     log_file_path = "simulator_log.xml"
 
     if os.path.exists(log_file_path) and os.path.getsize(log_file_path) > 0:
@@ -70,7 +73,7 @@ def log_message_xml(device, message, is_valid):
     log_entry = ET.SubElement(root, "log")
     ET.SubElement(log_entry, "timestamp").text = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     ET.SubElement(log_entry, "device").text = device
-    ET.SubElement(log_entry, "status").text = "Geçerli" if is_valid else "Geçersiz"
+    ET.SubElement(log_entry, "status").text = "Geçersiz"
     ET.SubElement(log_entry, "message").text = message
 
     tree.write(log_file_path, encoding="utf-8", xml_declaration=True)
@@ -89,7 +92,7 @@ header_pattern, body_patterns, footer_pattern = load_protocol("protocoll.xml")
 
 try:
     while True:
-        if keyboard.is_pressed('q'):
+        if keyboard.is_pressed('q'):  # Kullanıcı "q" tuşuna bastığında çıkış yap
             print("Kullanıcı çıkış yaptı. Simülasyon durduruluyor.")
             break
 
@@ -108,8 +111,7 @@ try:
                 client.publish(FEED_KEYS[i], mesaj)
             else:
                 print(f"❌ Geçersiz mesaj: {validation_msg}")
-
-            log_message_xml(device_id, mesaj, is_valid)
+                log_message_xml(device_id, mesaj, is_valid)  # Sadece geçersiz mesajları kaydediyoruz!
 
         time.sleep(5)
 
