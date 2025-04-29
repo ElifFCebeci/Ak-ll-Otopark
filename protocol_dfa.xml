@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dfa>
+    <alphabet> 
+        <symbol name="D" /> 
+        <symbol name="O" /> 
+        <symbol name="L" />
+        <symbol name="U" />
+        <symbol name="B" />
+        <symbol name="Ş" />
+    </alphabet>
+
+    <states> 
+        <state name="q0" />
+        <state name="q1" />
+        <state name="q2" />
+        <state name="q3" />
+        <state name="q4" />
+        <state name="q5" />
+        <state name="q6" />
+        <state name="q7" />
+    </states>
+
+    <transitions> 
+        <transition from="q0" to="q1" symbol="D" /> 
+        <transition from="q0" to="q7" symbol="O" /> 
+        <transition from="q0" to="q7" symbol="L" />
+        <transition from="q0" to="q7" symbol="U" />
+        <transition from="q0" to="q7" symbol="Ş" />
+        <transition from="q0" to = "q2" symbol="B" />
+        <transition from="q1" to="q3" symbol="O" />
+        <transition from="q1" to="q2" symbol="B" />
+        <transition from="q1" to="q7" symbol="D" />
+        <transition from="q1" to="q7" symbol="L" />
+        <transition from="q1" to="q7" symbol="U" />
+        <transition from="q1" to="q7" symbol="Ş" />
+        <transition from="q1" to="q7" symbol="B" />
+        <transition from="q2" to="q5" symbol="O" />
+        <transition form="q2" to ="q7" symbol="D"/>
+        <transition from="q2" to="q7" symbol="L" />
+        <transition from="q2" to="q7" symbol="U" />
+        <transition from="q2" to="q7" symbol="Ş" />
+        <transition from="q2" to="q7" symbol="B" />
+        <transition from="q3" to="q4" symbol="L" />
+        <transition from="q3" to="q7" symbol="D" />
+        <transition from="q3" to="q7" symbol="O" />
+        <transition from="q3" to="q7" symbol="U" />
+        <transition from="q3" to="q7" symbol="Ş" />
+        <transition from="q3" to="q7" symbol="B" />
+        <transition from="q4" to="q6" symbol="U" />
+        <transition from="q4" to="q7" symbol="D" />
+        <transition from="q4" to="q7" symbol="O" />
+        <transition from="q4" to="q7" symbol="L" />
+        <transition from="q4" to="q7" symbol="Ş" />
+        <transition from="q4" to="q7" symbol="B" />
+        <transition from="q5" to="q7" symbol="D" />
+        <transition from="q5" to="q7" symbol="O" />
+        <transition from="q5" to="q7" symbol="L" />
+        <transition from="q5" to="q7" symbol="U" />
+        <transition from="q5" to="q7" symbol="B" />
+        <transition from="q5" to="q6" symbol="Ş" />
+        <transition from = "q6" to="q1" symbol="D" />
+        <transition from="q6" to="q7" symbol="O" />
+        <transition from="q6" to="q7" symbol="L" />
+        <transition from="q6" to="q7" symbol="U" />
+        <transition from="q6" to="q2" symbol="B" />
+        <transition from="q6" to="q7" symbol="Ş" />
+
+
+    </transitions>
+</dfa>

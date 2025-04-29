@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dfa>
+    <alphabet> 
+        <symbol name="DOLU" /> 
+        <symbol name="BOŞ" /> 
+    </alphabet>
+
+    <states> 
+        <state name="GİRİŞ" />
+        <state name="1.KAT" />
+        <state name="2.KAT" />
+        <state name="ÇIKIŞ" />
+    </states>
+
+    <transitions> 
+        <transition from="GİRİŞ" to="1.KAT" symbol="BOŞ" /> 
+        <transition from="GİRİŞ" to="ÇIKIŞ" symbol="DOLU" /> 
+        <transition from="1.KAT" to="2.KAT" symbol="DOLU" /> 
+        <transition from="1.KAT" to="1.KAT" symbol="BOŞ" /> 
+        <transition from="2.KAT" to="ÇIKIŞ" symbol="DOLU" /> 
+        <transition from="2.KAT" to="2.KAT" symbol="BOŞ" />
+        <transition from="ÇIKIŞ" to="ÇIKIŞ" symbol="DOLU" />
+        <transition from="ÇIKIŞ" to="ÇIKIŞ" symbol="BOŞ" />
+    </transitions>
+</dfa>
