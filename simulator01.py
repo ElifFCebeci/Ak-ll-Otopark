@@ -9,7 +9,7 @@ from Adafruit_IO import MQTTClient
 
 # Adafruit IO Bilgileri
 ADAFRUIT_IO_USERNAME = "Elif19"
-ADAFRUIT_IO_KEY = "aio_cfPa32MhI58OmHsfScUDmBUKYJof"
+ADAFRUIT_IO_KEY = "key burada"
 FEED_KEYS = ["1-park-alaninin-durumu", "2-park-alaninin-durumu",
              "3-park-alaninin-durumu", "4-park-alaninin-durumu",
              "5-park-alaninin-durumu", "6-park-alaninin-durumu",
