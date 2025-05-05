@@ -30,7 +30,7 @@ def load_protocol(filename):
 
     return header_pattern, body_patterns, footer_pattern
 
-# Mesaj Doğrulama
+# Regex ile Mesaj Doğrulama
 def validate_message(message, header_pattern, body_patterns, footer_pattern):
     pos = 0
     header_match = re.match(header_pattern, message[pos:])
