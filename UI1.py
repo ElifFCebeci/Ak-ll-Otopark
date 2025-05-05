@@ -6,7 +6,7 @@ from datetime import datetime
 import re
 
 ADAFRUIT_AIO_USERNAME = "Elif19"
-ADAFRUIT_AIO_KEY = "aio_cfPa32MhI58OmHsfScUDmBUKYJof"
+ADAFRUIT_AIO_KEY = "key burada"
 FEED_KEYS = [
     "1-park-alaninin-durumu", "2-park-alaninin-durumu",
     "3-park-alaninin-durumu", "4-park-alaninin-durumu",
