@@ -56,7 +56,7 @@ def log_message_xml(device, message, is_valid):
     if is_valid:  # Eğer mesaj geçerliyse loga ekleme yapma
         return
 
-    log_file_path = "simulator_log.xml"
+    log_file_path = "simulator_log.xml" # Log dosyası yoksa oluştur,varsa ekleme yap.
 
     if os.path.exists(log_file_path) and os.path.getsize(log_file_path) > 0:
         try:
@@ -111,7 +111,7 @@ try:
                 client.publish(FEED_KEYS[i], mesaj)
             else:
                 print(f"❌ Geçersiz mesaj: {validation_msg}")
-                log_message_xml(device_id, mesaj, is_valid)  # Sadece geçersiz mesajları kaydediyoruz!
+                log_message_xml(device_id, mesaj, is_valid)  # Sadece geçersiz mesajları kaydetme
 
         time.sleep(5)
 
